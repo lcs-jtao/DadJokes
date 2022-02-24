@@ -59,7 +59,8 @@ struct ContentView: View {
             
             // Iterate (loop) over the list (array) of jokes
             // Make each joke accessible using the name "currentJoke"
-            List(favourites) { currentJoke in
+            // id: \.self     <-- That tells the List structure to identify each joke using the text of the joke itself
+            List(favourites, id: \.self) { currentJoke in
                 Text(currentJoke.joke)
             }
             
