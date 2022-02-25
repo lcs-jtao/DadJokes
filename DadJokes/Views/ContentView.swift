@@ -99,6 +99,7 @@ struct ContentView: View {
     }
     
     // MARK: Functions
+    
     // This function loads a new joke by talking to an endpoint on the web.
     // We must mark the function as "async" so that it can be asynchronously which means it may be run at the same time as other tasks
     // This is the function definition (it is where the computer "learns" what it takes to load a new joke).
@@ -140,6 +141,41 @@ struct ContentView: View {
             // Print the contents of the "error" constant that the do-catch block populates
             print(error)
         }
+    }
+    
+    // Saves (persists) the data to local storage on the device
+    func persistFavourites() {
+        
+        // Get a URL that points to the saved JSON data containing our list of tasks
+        let filename = getDocumentsDirectory().appendingPathComponent(savedFavouritesLabel)
+        
+        // Try to encode the data in our people array to JSON
+        do {
+            // Create an encoder
+            let encoder = JSONEncoder()
+            
+            // Ensure the JSON written to the file is human-readable
+            encoder.outputFormatting = .prettyPrinted
+            
+            // Encode the list of favourites we've collected
+            let data = try encoder.encode(favourites)
+            
+            // Actually write the JSON file to the documents directory
+            //* "Atomic": either complete or not complete (make it all happen or not happen at all)
+            try data.write(to: filename, options: [.atomicWrite, .completeFileProtection])
+            
+            // See the data that was written
+            print("Saved data to documents directory successfully.")
+            print("===")
+            print(String(data: data, encoding: .utf8)!)
+            
+        } catch {
+            
+            print(error.localizedDescription)
+            print("Unable to write list of favourites to documents directory in app bundle on device.")
+            
+        }
+
     }
     
 }
